@@ -12,7 +12,7 @@ conda install -c bioconda samtools
 conda install -c bioconda bioawk
 ```
 
-- To run the blast command on a list of FASTA files (assuming both nuclear and mito assembly in same folder): '1_run_blast.sh'
+- To run the blast command on a list of FASTA files (assuming both nuclear and mito assembly in same folder): `1_run_blast.sh`
 ```
 #!/bin/bash
 
@@ -75,14 +75,14 @@ for blast_hits_file in glob.glob('*_blast_hits_filtered.tsv'):
             out.write(f"{id}\t{total_length}\n")
 ```
 
-- index spade assembly fasta file: ‘3_run_index_ncl_assembly.sh’
+- index spade assembly fasta file: `3_run_index_ncl_assembly.sh`
 ```
 #!/bin/bash
 for fasta_file in *_ncl_assembly.fasta; do samtools faidx "$fasta_file"; done
 ```
 
 
-- '4_run_exclude_overlapped.py'
+- `4_run_exclude_overlapped.py`
 
 ```
 import glob
@@ -103,3 +103,42 @@ for lengths_file in glob.glob('*_lengths.tsv'):
                 f3.write(contig_id + '\n')
 ```
 
+
+
+- `5_run_extract_ncl_fasta_after_excluding.sh`
+```
+for f in *_ncl_assembly.fasta; do
+    exclude="${f%_ncl_assembly.fasta}_exclude.txt"
+    output="${f%_ncl_assembly.fasta}_ncl_assembly_filtered.fasta"
+    awk '{ if ((NR>1)&&($0~/^>/)) { printf("\n%s", $0); } else if (NR==1) { printf("%s", $0); } else { printf("\t%s", $0); } }' "$f" | grep -vFf "$exclude" - | tr "\t" "\n" > "$output"
+done
+```
+
+
+- `6_run_reverse_sort_200.sh`
+
+```
+for f in *_ncl_assembly_filtered.fasta; do
+    prefix="${f%_ncl_assembly_filtered.fasta}"
+    bioawk -c fastx -v prefix="$prefix" '{if(length($seq)>=200) print ">" prefix "_scaffold-" (++i)" "length($seq)"\n"$seq }' < "$f" > "${prefix}_ncl_assembly_filtered_sorted.fasta"
+done
+```
+
+
+- `7_run_reverse_mito_sort.sh`
+```
+for f in *_mito_assembly.fasta; do
+    prefix="${f%_mito_assembly.fasta}"
+    bioawk -c fastx -v prefix="$prefix" '{ print ">" prefix "_mito-" (++i)" "length($seq)"\n"$seq }' < "$f" > "${prefix}_mito_assembly_sorted.fasta"
+done
+```
+
+- `8_run_final_fasta.sh`
+
+```
+for f in *_ncl_assembly_filtered_sorted.fasta; do
+  prefix="${f%_ncl_assembly_filtered_sorted.fasta}"
+	mito_file="${f%_ncl_assembly_filtered_sorted.fasta}_mito_assembly_sorted.fasta"
+cat "$f" "$mito_file" > "${prefix}_final_assembly.fasta"
+done
+```
