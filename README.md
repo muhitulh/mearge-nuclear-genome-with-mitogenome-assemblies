@@ -12,7 +12,7 @@ conda install -c bioconda samtools
 conda install -c bioconda bioawk
 ```
 
-- To run the blast command on a list of FASTA files (assuming both nuclear and mito assembly in same folder)
+- To run the blast command on a list of FASTA files (assuming both nuclear and mito assembly in same folder): '1_run_blast.sh'
 ```
 #!/bin/bash
 
@@ -73,5 +73,33 @@ for blast_hits_file in glob.glob('*_blast_hits_filtered.tsv'):
             for interval in id_dict[id]:
                 total_length += interval[1] - interval[0]
             out.write(f"{id}\t{total_length}\n")
+```
+
+- index spade assembly fasta file: ‘3_run_index_ncl_assembly.sh’
+```
+#!/bin/bash
+for fasta_file in *_ncl_assembly.fasta; do samtools faidx "$fasta_file"; done
+```
+
+
+- '4_run_exclude_overlapped.py'
+
+```
+import glob
+
+for lengths_file in glob.glob('*_lengths.tsv'):
+    contigs_file = lengths_file.replace('_lengths.tsv', '_ncl_assembly.fasta.fai')
+    exclude_file = lengths_file.replace('_lengths.tsv', '_exclude.txt')
+    with open(lengths_file, 'r') as f1, open(contigs_file, 'r') as f2, open(exclude_file, 'w') as f3:
+        lengths = {}
+        for line in f2:
+            contig_id, length = line.split()[0:2]
+            lengths[contig_id] = int(length)
+        for line in f1:
+            contig_id, length = line.split()[0:2]
+            length = int(length)
+            coverage = length / lengths[contig_id] * 100
+            if coverage > 90:  # Adjust the threshold as needed
+                f3.write(contig_id + '\n')
 ```
 
