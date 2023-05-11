@@ -31,6 +31,32 @@ mv *.nhd *.nhi *.nhr *.nin *.nog *.nsd *.nsi *.nhd *.nsq *_hits.tsv database_fil
 ```
 ![image](https://github.com/muhitulh/blast-and-mearge-nuclear-genome-with-mitogenome/assets/67751990/e4ec3119-d270-40df-9e76-69c3a8cc52dc)
 
+The column headers are as follows:
+
+Column 1: qseqid, query sequence id. If you open you query file, you will find the id after ‘>’ sign
+
+Column 2: sseqid, subject i.e., reference sequence id
+
+Column 3: pident, percentage of identical matches
+
+Column 4: length, alignment length
+
+Column 5: mismatch, number of mismatches
+
+Column 6: gapopen, number of gap openings
+
+Column 7: qstart, start of alignment in query
+
+Column 8: qend, end of alignment in query
+
+Column 9: sstart, start of alignment in subject
+
+Column 10: send, end of alignment in subject
+
+Column 11: evalue, expect value
+
+Column 12: bitscore, bit score
+
 
 
 - calculate length all together: `2_run_calculate_length.py`
