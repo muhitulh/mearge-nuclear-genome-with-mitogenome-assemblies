@@ -29,6 +29,9 @@ done
 mkdir database_file
 mv *.nhd *.nhi *.nhr *.nin *.nog *.nsd *.nsi *.nhd *.nsq *_hits.tsv database_file/
 ```
+![image](https://github.com/muhitulh/blast-and-mearge-nuclear-genome-with-mitogenome/assets/67751990/e4ec3119-d270-40df-9e76-69c3a8cc52dc)
+
+
 
 - calculate length all together: `2_run_calculate_length.py`
 ```
