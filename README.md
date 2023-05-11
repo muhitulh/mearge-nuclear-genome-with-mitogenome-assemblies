@@ -77,13 +77,16 @@ for blast_hits_file in glob.glob('*_blast_hits_filtered.tsv'):
                 total_length += interval[1] - interval[0]
             out.write(f"{id}\t{total_length}\n")
 ```
+![image](https://github.com/muhitulh/blast-and-mearge-nuclear-genome-with-mitogenome/assets/67751990/e8803772-7d76-49cd-a4e1-1e7d700c3c90)
+
 
 - index spade assembly fasta file: `3_run_index_ncl_assembly.sh`
 ```
 #!/bin/bash
 for fasta_file in *_ncl_assembly.fasta; do samtools faidx "$fasta_file"; done
 ```
-
+![image](https://github.com/muhitulh/blast-and-mearge-nuclear-genome-with-mitogenome/assets/67751990/64d41489-7e58-418e-96db-959ae026e65e)
+here, col 1 = contig ID, col2 = length (bases long) of contigs, col3 = the third column indicates the first base of "contig1" starts in the FASTA file.
 
 - `4_run_exclude_overlapped.py`
 
