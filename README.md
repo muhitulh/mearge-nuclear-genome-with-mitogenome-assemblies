@@ -122,16 +122,18 @@ done
 
 
 - `6_run_reverse_sort_200.sh`
-
+reverse size sort filt.fasta, renumber, append isolate ID to prefix e.g. SN15_scf001
 ```
 for f in *_ncl_assembly_filtered.fasta; do
     prefix="${f%_ncl_assembly_filtered.fasta}"
     bioawk -c fastx -v prefix="$prefix" '{if(length($seq)>=200) print ">" prefix "_scaffold-" (++i)" "length($seq)"\n"$seq }' < "$f" > "${prefix}_ncl_assembly_filtered_sorted.fasta"
 done
 ```
+![image](https://github.com/muhitulh/blast-and-mearge-nuclear-genome-with-mitogenome/assets/67751990/6d5a0e81-6071-4ec4-b505-ef99807170ca)
 
 
 - `7_run_reverse_mito_sort.sh`
+- mitoz.fasta id will need changing too.. e.g. SN15_mtDNA_1/2
 ```
 for f in *_mito_assembly.fasta; do
     prefix="${f%_mito_assembly.fasta}"
@@ -148,3 +150,4 @@ for f in *_ncl_assembly_filtered_sorted.fasta; do
 cat "$f" "$mito_file" > "${prefix}_final_assembly.fasta"
 done
 ```
+![image](https://github.com/muhitulh/blast-and-mearge-nuclear-genome-with-mitogenome/assets/67751990/465c88b4-c7f4-4633-a6f5-5eb9493b263f)
