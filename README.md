@@ -42,22 +42,6 @@ for ncl_file in *_ncl_assembly.fasta; do
 done
 # here -n: this option tells sort to perform a numerical sort, -r: sort the input in reverse order, -k: column 12
 
-
-
-
-
-#!/bin/bash
-
-for ncl_file in *_ncl_assembly.fasta; do
-  db_name=$(basename "$ncl_file" _ncl_assembly.fasta)
-  makeblastdb -in "$ncl_file" -out "$db_name" -dbtype 'nucl' -hash_index
-
-  mito_file="${db_name}_mito_assembly.fasta"
-  blastn -query "$mito_file" -task blastn -db "$db_name" -outfmt 6 -out "${db_name}_blast_hits.tsv" -evalue 1e-10 -num_threads 16
-
-  sort -n -r -k 12 "${db_name}_blast_hits.tsv" > "${db_name}_blast_hits_sorted.tsv"
-done
-
 mkdir database_file
 mv *.nhd *.nhi *.nhr *.nin *.nog *.nsd *.nsi *.nhd *.nsq *_hits.tsv database_file/
 ```
